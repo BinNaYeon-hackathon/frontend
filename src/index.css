@@ -20,7 +20,7 @@ body {
   left: 60px;
   top: 52px;
 
-  width: 120px;
+  width: auto;
   height: 80px;
 
   cursor: pointer;
