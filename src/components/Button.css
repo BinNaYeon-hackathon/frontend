@@ -1,0 +1,30 @@
+.button {
+  border: none;
+  border-radius: 52px;
+  cursor: pointer;
+  background-color: #b08363;
+  color: #f7f0e6;
+}
+
+.button:hover {
+  background-color: #70452b;
+}
+
+.small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.medium {
+  padding: 10px 18px;
+  width: 204px;
+  height: 72px;
+  font-size: 24px;
+}
+
+.large {
+  padding: 14px 24px;
+  width: 340px;
+  height: 100px;
+  font-size: 36px;
+}
