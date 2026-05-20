@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import { useState } from "react";
 import {
   Heart,
@@ -19,6 +21,19 @@ export default function InstagramPost({
   setContent,
   createdAt,
 }) {
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+
+      textareaRef.current.style.height = `${Math.min(
+        textareaRef.current.scrollHeight,
+        50,
+      )}px`;
+    }
+  }, [content]);
+
   const [currentImage, setCurrentImage] = useState(0);
 
   const hasImages = images.length > 1;
@@ -41,7 +56,7 @@ export default function InstagramPost({
 
   return (
     <div className="instagram-post">
-      <div className="post-header">
+      <div className="instagram-header">
         <div className="header-left">
           <div className="profile-ring">
             <div className="profile-inner">
@@ -69,8 +84,8 @@ export default function InstagramPost({
         {images.length > 0 ? (
           <img
             src={images[currentImage]}
-            alt={`post-${currentImage}`}
-            className="post-image"
+            alt={`instagram-${currentImage}`}
+            className="instagram-image"
           />
         ) : (
           <div className="image-placeholder" />
@@ -109,18 +124,20 @@ export default function InstagramPost({
       </div>
 
       <div className="content-section">
-        <div className="post-content">
+        <div className="instagram-content">
           <span className="brand-name-text">{brandName}</span>
 
           <textarea
-            className="post-content-input"
+            ref={textareaRef}
+            className="instagram-content-input"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="내용 입력..."
+            rows={1}
           />
         </div>
 
-        <p className="post-date">{formatDate(createdAt)}</p>
+        <p className="instagram-date">{formatDate(createdAt)}</p>
       </div>
     </div>
   );

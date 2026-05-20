@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import {
   MessageCircle,
   Repeat2,
@@ -16,7 +17,18 @@ export default function XPost({
   createdAt,
   setContent,
 }) {
-  const hasImages = images.length > 0;
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+
+      textareaRef.current.style.height = `${Math.min(
+        textareaRef.current.scrollHeight,
+        120,
+      )}px`;
+    }
+  }, [content]);
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("ko-KR", {
@@ -42,16 +54,23 @@ export default function XPost({
           </div>
 
           <textarea
+            ref={textareaRef}
             className="x-content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="내용 입력..."
+            rows={1}
           />
 
-          {hasImages && (
-            <div className="x-media">
-              {images.slice(0, 4).map((img, idx) => (
-                <img key={idx} src={img} className="x-image" />
+          {images.length > 0 && (
+            <div className={`x-media ${images.length > 1 ? "" : "one"}`}>
+              {images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`post-${index}`}
+                  className="x-image"
+                />
               ))}
             </div>
           )}

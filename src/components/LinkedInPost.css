@@ -73,7 +73,6 @@
 
 .linkedin-content-input {
   width: 100%;
-  max-height: 110px;
 
   border: none;
   outline: none;
@@ -83,6 +82,11 @@
 
   font-size: 15px;
   line-height: 1.5;
+
+  min-height: 24px;
+  max-height: 120px;
+
+  overflow-y: auto;
 }
 
 .linkedin-image-section.one {

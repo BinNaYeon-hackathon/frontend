@@ -61,7 +61,7 @@ function PreviewPage() {
                 createdAt={new Date()}
                 content={content}
                 setContent={setContent}
-                images={[sampleImage, sampleImage]}
+                images={[sampleImage]}
               />
             </div>
           )}

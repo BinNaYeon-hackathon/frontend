@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { ThumbsUp, MessageCircle, Send, MoreHorizontal } from "lucide-react";
 
 import "./LinkedInPost.css";
@@ -10,6 +11,19 @@ export default function LinkedInPost({
   setContent,
   createdAt,
 }) {
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+
+      textareaRef.current.style.height = `${Math.min(
+        textareaRef.current.scrollHeight,
+        120,
+      )}px`;
+    }
+  }, [content]);
+
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
@@ -50,10 +64,12 @@ export default function LinkedInPost({
       {/* content */}
       <div className="linkedin-content-section">
         <textarea
+          ref={textareaRef}
           className="linkedin-content-input"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="내용 입력..."
+          rows={1}
         />
       </div>
 
