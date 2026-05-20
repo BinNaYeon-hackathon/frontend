@@ -15,39 +15,44 @@ function PreviewPage() {
   // 데이터 fetch 예시
   useEffect(() => {
     async function fetchPosts() {
+      // 실제 API 연결 시:
+      // const response = await fetch("/api/posts");
+      // const data = await response.json();
       const data = {
-        project_id: 1,
+        success: true,
+        message: "",
 
-        brand_name: "brandname",
-
-        created_at: "2026-05-20T12:00:00",
-
-        posts: {
-          instagram: {
-            content: "인스타그램용 게시글입니다.",
-            hashtags: ["신제품", "이벤트"],
-            images: [
-              "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
+        data: [
+          {
+            platform: "instagram",
+            brand_name: "나이키",
+            post_date: "2026-05-20",
+            body: "신제품 출시 안내입니다.",
+            hashtags: ["신제품", "이벤트", "브랜드소식"],
+            image_url:
               "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-            ],
           },
 
-          x: {
-            content: "X용 짧은 게시글입니다.",
-            hashtags: ["브랜드소식"],
-            images: [
+          {
+            platform: "x",
+            brand_name: "나이키",
+            post_date: "2026-05-20",
+            body: "나이키 신제품 출시! 새로운 움직임을 지금 만나보세요.",
+            hashtags: ["신제품", "나이키"],
+            image_url:
               "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
-            ],
           },
 
-          linkedin: {
-            content: "링크드인용 전문적인 게시글입니다.",
-            hashtags: ["브랜딩", "마케팅"],
-            images: [
-              "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
-            ],
+          {
+            platform: "linkedin",
+            brand_name: "나이키",
+            post_date: "2026-05-20",
+            body: "나이키가 새로운 제품을 선보입니다. 이번 신제품은 더 나은 움직임과 일상의 퍼포먼스를 지원하기 위해 기획되었습니다.",
+            hashtags: ["Nike", "ProductLaunch", "BrandNews"],
+            image_url:
+              "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77",
           },
-        },
+        ],
       };
 
       setProject(data);
@@ -60,55 +65,43 @@ function PreviewPage() {
     return <div>Loading...</div>;
   }
 
-  // 현재 탭 데이터
-  const currentPost = project.posts[tab];
+  const currentPost = project.data.find((post) => post.platform === tab);
 
-  // content 수정
   const handleContentChange = (value) => {
     setProject((prev) => ({
       ...prev,
 
-      posts: {
-        ...prev.posts,
+      data: prev.data.map((post) =>
+        post.platform === tab
+          ? {
+              ...post,
 
-        [tab]: {
-          ...prev.posts[tab],
-
-          content: value,
-        },
-      },
+              body: value,
+            }
+          : post,
+      ),
     }));
   };
 
-  // 저장 / 게시 API
   const handlePublish = async () => {
-    try {
-      const response = await fetch(
-        `/api/projects/${project.project_id}/posts`,
-        {
-          method: "PATCH",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify(project),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("게시 실패");
-      }
-
-      alert("게시물이 저장되었습니다.");
-    } catch (error) {
-      console.error(error);
-
-      alert("오류가 발생했습니다.");
-    }
+    // try {
+    //   const response = await fetch("/api/posts", {
+    //     method: "PATCH",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(project),
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error("게시 실패");
+    //   }
+    //   alert("게시물이 저장되었습니다.");
+    // } catch (error) {
+    //   console.error(error);
+    //   alert("오류가 발생했습니다.");
+    // }
   };
 
-  // 플랫폼별 컴포넌트 매핑
   const components = {
     instagram: InstagramPost,
     x: XPost,
@@ -151,12 +144,12 @@ function PreviewPage() {
 
         <div className="preview-content">
           <CurrentComponent
-            brandName={project.brand_name}
-            createdAt={project.created_at}
-            content={currentPost.content}
+            brandName={currentPost.brand_name}
+            createdAt={currentPost.post_date}
+            content={currentPost.body}
             setContent={handleContentChange}
             hashtags={currentPost.hashtags}
-            images={currentPost.images}
+            images={[currentPost.image_url]}
           />
         </div>
       </div>
