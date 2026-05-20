@@ -3,6 +3,7 @@ import "./PreviewPage.css";
 import InstagramPost from "../components/InstagramPost.jsx";
 import sampleImage from "../assets/post-image-sample.png";
 import XPost from "../components/XPost.jsx";
+import LinkedInPost from "../components/LinkedInPost.jsx";
 
 function PreviewPage() {
   const [tab, setTab] = useState("instagram");
@@ -67,7 +68,13 @@ function PreviewPage() {
 
           {tab === "linkedin" && (
             <div>
-              <h2>LinkedIn Preview</h2>
+              <LinkedInPost
+                brandName="yournamehere"
+                createdAt={new Date()}
+                content={content}
+                setContent={setContent}
+                images={[sampleImage, sampleImage]}
+              />
             </div>
           )}
         </div>
