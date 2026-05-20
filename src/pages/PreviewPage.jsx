@@ -80,23 +80,6 @@ function PreviewPage() {
     }));
   };
 
-  // hashtags 수정
-  const handleHashtagsChange = (hashtags) => {
-    setProject((prev) => ({
-      ...prev,
-
-      posts: {
-        ...prev.posts,
-
-        [tab]: {
-          ...prev.posts[tab],
-
-          hashtags,
-        },
-      },
-    }));
-  };
-
   // 저장 / 게시 API
   const handlePublish = async () => {
     try {
@@ -173,7 +156,6 @@ function PreviewPage() {
             content={currentPost.content}
             setContent={handleContentChange}
             hashtags={currentPost.hashtags}
-            setHashtags={handleHashtagsChange}
             images={currentPost.images}
           />
         </div>
