@@ -35,7 +35,6 @@ export default function LinkedInPost({
 
   return (
     <div className="linkedin-post">
-      {/* header */}
       <div className="linkedin-header">
         <div className="linkedin-header-left">
           {profileImage ? (
@@ -62,7 +61,6 @@ export default function LinkedInPost({
         </button>
       </div>
 
-      {/* content */}
       <div className="linkedin-content-section">
         <textarea
           ref={textareaRef}
@@ -84,7 +82,6 @@ export default function LinkedInPost({
         )}
       </div>
 
-      {/* image */}
       {images.length > 0 && (
         <div
           className={`linkedin-image-section ${

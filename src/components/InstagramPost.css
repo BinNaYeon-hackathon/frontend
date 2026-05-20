@@ -212,7 +212,7 @@
 
 .instagram-hashtags {
   display: flex;
-  fleinstagram-wrap: wrap;
+  flex-wrap: wrap;
 
   gap: 8px;
 
