@@ -210,6 +210,22 @@
   word-break: break-word;
 }
 
+.instagram-hashtags {
+  display: flex;
+  fleinstagram-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.instagram-hashtag {
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #0a66c2;
+}
+
 .brand-name-text {
   font-weight: 600;
   margin-right: 4px;

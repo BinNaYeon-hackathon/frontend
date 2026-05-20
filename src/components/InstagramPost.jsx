@@ -19,6 +19,7 @@ export default function InstagramPost({
   images = [],
   content,
   setContent,
+  hashtags = [],
   createdAt,
 }) {
   const textareaRef = useRef(null);
@@ -29,7 +30,7 @@ export default function InstagramPost({
 
       textareaRef.current.style.height = `${Math.min(
         textareaRef.current.scrollHeight,
-        50,
+        20,
       )}px`;
     }
   }, [content]);
@@ -135,6 +136,16 @@ export default function InstagramPost({
             placeholder="내용 입력..."
             rows={1}
           />
+
+          {hashtags.length > 0 && (
+            <div className="instagram-hashtags">
+              {hashtags.map((tag, index) => (
+                <span key={index} className="instagram-hashtag">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <p className="instagram-date">{formatDate(createdAt)}</p>

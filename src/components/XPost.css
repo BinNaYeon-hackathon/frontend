@@ -69,6 +69,22 @@
   word-break: break-word;
 }
 
+.x-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.x-hashtag {
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #0a66c2;
+}
+
 .x-media.one {
   margin-top: 10px;
   grid-template-columns: repeat(1, 1fr);

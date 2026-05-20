@@ -16,6 +16,7 @@ export default function XPost({
   content,
   createdAt,
   setContent,
+  hashtags = [],
 }) {
   const textareaRef = useRef(null);
 
@@ -61,6 +62,15 @@ export default function XPost({
             placeholder="내용 입력..."
             rows={1}
           />
+          {hashtags.length > 0 && (
+            <div className="x-hashtags">
+              {hashtags.map((tag, index) => (
+                <span key={index} className="x-hashtag">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {images.length > 0 && (
             <div className={`x-media ${images.length > 1 ? "" : "one"}`}>

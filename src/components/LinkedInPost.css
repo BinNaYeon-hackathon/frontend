@@ -89,6 +89,22 @@
   overflow-y: auto;
 }
 
+.linkedin-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.linkedin-hashtag {
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #0a66c2;
+}
+
 .linkedin-image-section.one {
   display: block;
 }

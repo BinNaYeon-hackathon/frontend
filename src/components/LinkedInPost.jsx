@@ -9,6 +9,7 @@ export default function LinkedInPost({
   images = [],
   content,
   setContent,
+  hashtags = [],
   createdAt,
 }) {
   const textareaRef = useRef(null);
@@ -71,6 +72,16 @@ export default function LinkedInPost({
           placeholder="내용 입력..."
           rows={1}
         />
+
+        {hashtags.length > 0 && (
+          <div className="linkedin-hashtags">
+            {hashtags.map((tag, index) => (
+              <span key={index} className="linkedin-hashtag">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* image */}

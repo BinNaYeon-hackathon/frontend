@@ -49,6 +49,7 @@ function PreviewPage() {
                 createdAt={new Date()}
                 content={content}
                 setContent={setContent}
+                hashtags={["marketing", "branding", "startup"]}
                 images={[sampleImage, sampleImage]}
               />
             </div>
@@ -61,6 +62,7 @@ function PreviewPage() {
                 createdAt={new Date()}
                 content={content}
                 setContent={setContent}
+                hashtags={["marketing", "branding", "startup"]}
                 images={[sampleImage]}
               />
             </div>
@@ -73,6 +75,7 @@ function PreviewPage() {
                 createdAt={new Date()}
                 content={content}
                 setContent={setContent}
+                hashtags={["marketing", "branding", "startup"]}
                 images={[sampleImage, sampleImage]}
               />
             </div>
