@@ -1,8 +1,14 @@
 import { useState } from "react";
 import "./PreviewPage.css";
+import InstagramPost from "../components/InstagramPost.jsx";
+import sampleImage from "../assets/post-image-sample.png";
 
 function PreviewPage() {
   const [tab, setTab] = useState("instagram");
+  const [content, setContent] = useState(
+    `Flyer design for Workspace 51.
+텍스트 수정 가능`,
+  );
 
   return (
     <div className="preview-page">
@@ -36,7 +42,13 @@ function PreviewPage() {
         <div className="preview-content">
           {tab === "instagram" && (
             <div>
-              <h2>Instagram Preview</h2>
+              <InstagramPost
+                brandName="yournamehere"
+                createdAt={new Date()}
+                content={content}
+                setContent={setContent}
+                images={[sampleImage, sampleImage]}
+              />
             </div>
           )}
 
