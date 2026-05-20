@@ -21,7 +21,7 @@ export default function InstagramPost({
 }) {
   const [currentImage, setCurrentImage] = useState(0);
 
-  const hasMultipleImages = images.length > 1;
+  const hasImages = images.length > 1;
 
   const nextImage = () => {
     setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
@@ -76,7 +76,7 @@ export default function InstagramPost({
           <div className="image-placeholder" />
         )}
 
-        {hasMultipleImages && (
+        {hasImages && (
           <>
             <button onClick={prevImage} className="nav-button left">
               <ChevronLeft size={18} />

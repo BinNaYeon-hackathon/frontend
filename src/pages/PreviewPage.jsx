@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./PreviewPage.css";
 import InstagramPost from "../components/InstagramPost.jsx";
 import sampleImage from "../assets/post-image-sample.png";
+import XPost from "../components/XPost.jsx";
 
 function PreviewPage() {
   const [tab, setTab] = useState("instagram");
@@ -54,7 +55,13 @@ function PreviewPage() {
 
           {tab === "x" && (
             <div>
-              <h2>X Preview</h2>
+              <XPost
+                brandName="yournamehere"
+                createdAt={new Date()}
+                content={content}
+                setContent={setContent}
+                images={[sampleImage, sampleImage]}
+              />
             </div>
           )}
 
