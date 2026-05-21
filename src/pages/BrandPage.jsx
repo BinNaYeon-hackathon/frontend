@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./BrandPage.css"; // 보내주신 이미지 스타일을 여기에 입히세요!]
+import "./BrandPage.css"; 
 
 //function BrandPage() {
   //return <h1>브랜드 정보 입력 화면</h1>;
@@ -40,7 +40,7 @@ export default function BrandPage() {
   const handleConfirmNext = () => {
     setShowConfirmModal(false);
 
-    // [중요] 나중에 n8n 연동 전까지 서비스를 굴릴 가상의 AI 분석 결과 데이터 (MySQL 명세서 기준)
+    // 나중에 n8n 연동 전까지 서비스를 굴릴 가상의 AI 분석 결과 데이터 (MySQL 명세서 기준)
     const mockAIResult = {
       brandName: brandName,
       brandDescription: description,
@@ -67,7 +67,7 @@ export default function BrandPage() {
           <label>브랜드 이름</label>
           <input
             type="text"
-            placeholder="Placeholder"
+            placeholder="브랜드명을 입력하세요"
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
           />
@@ -103,7 +103,7 @@ export default function BrandPage() {
         <div className="modal-backdrop" onClick={() => setShowWarningModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>⚠️ 입력 확인</h3>
-            <p>내용을 전부 입력해주세요!</p>
+            <p>내용을 전부 입력해주세요</p>
             <button className="modal-btn" onClick={() => setShowWarningModal(false)}>확인</button>
           </div>
         </div>
@@ -113,10 +113,10 @@ export default function BrandPage() {
       {showConfirmModal && (
         <div className="modal-backdrop" onClick={() => setShowConfirmModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>🚀 분석 시작</h3>
-            <p>브랜드 분석을 시작하고 게시글 생성 단계로 넘어가시겠습니까?</p>
+            <h3>분석 시작</h3>
+            <p>게시글 생성 단계로 넘어가시겠습니까?</p>
             <div className="modal-btn-group">
-              <button className="modal-btn confirm" onClick={handleConfirmNext}>네, 진행합니다</button>
+              <button className="modal-btn confirm" onClick={handleConfirmNext}>확인</button>
               <button className="modal-btn cancel" onClick={() => setShowConfirmModal(false)}>취소</button>
             </div>
           </div>

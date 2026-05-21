@@ -22,7 +22,7 @@ function Layout() {
     <div className="page">
       {!isHome && (
         <Link to="/">
-          <img src={logo} alt="logo" className="logo" />
+          <img src={logo} alt ="logo" className="logo" />
         </Link>
       )}
 
