@@ -5,7 +5,7 @@ import fileIcon from "../assets/file-icon.png";
 import arrowRight from "../assets/arrow-circle-right.png";
 
 
-export default function CreatePage() {
+export default function CreatePage({ triggerLoading }) {
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -54,6 +54,8 @@ export default function CreatePage() {
   const handleConfirmNext = () => {
     setShowConfirmModal(false);
 
+    triggerLoading(true, "게시물 생성 중 ...");
+
     // 1번 팀원의 인스타그램 포스트 컴포넌트 규격에 맞춰 쏴줄 최종 데이터 주머니
     const finalPostData = {
       brandName: brandProfile.brandName || "Brandname",
@@ -65,8 +67,11 @@ export default function CreatePage() {
       createdAt: new Date().toISOString()
     };
 
-    // ➔ 최종 미리보기(preview) 페이지로 데이터를 실어 나르며 이동!
-    navigate("/preview", { state: { postData: finalPostData } });
+    // 3초(3000ms) 동안 로딩창을 보여준 뒤 다음 페이지로 이동
+    setTimeout(() => {
+      triggerLoading(false); // 로딩창 끄기
+      navigate("/preview", { state: { postData: finalPostData } });// 최종 미리보기 페이지로 데이터 싣고 이동
+    }, 3000);
   };
 
   return (
@@ -130,7 +135,7 @@ export default function CreatePage() {
       </div>
 
       {/* 우측 하단 생성하기 화살표 버튼 */}
-      <button className="create-button" onClick={handleCreateClick}>
+      <button type="button" className="create-button" onClick={handleCreateClick}>
         생성하기 
         <img src={arrowRight} alt ="arrowRight" className="arrow-icon" />
       </button>
@@ -141,7 +146,7 @@ export default function CreatePage() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>⚠️ 입력 확인</h3>
             <p>사용할 SNS를 하나 이상 선택하고 내용을 입력해주세요</p>
-            <button className="modal-btn" onClick={() => setShowWarningModal(false)}>확인</button>
+            <button type="button" className="modal-btn" onClick={() => setShowWarningModal(false)}>확인</button>
           </div>
         </div>
       )}
@@ -153,8 +158,8 @@ export default function CreatePage() {
             <h3>콘텐츠 생성</h3>
             <p>입력하신 정보로 AI 콘텐츠 생성을 시작하시겠습니까?</p>
             <div className="modal-btn-group">
-              <button className="modal-btn confirm" onClick={handleConfirmNext}>확인</button>
-              <button className="modal-btn cancel" onClick={() => setShowConfirmModal(false)}>취소</button>
+              <button type="button" className="modal-btn confirm" onClick={handleConfirmNext}>확인</button>
+              <button type="button" className="modal-btn cancel" onClick={() => setShowConfirmModal(false)}>취소</button>
             </div>
           </div>
         </div>
