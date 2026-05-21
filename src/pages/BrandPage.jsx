@@ -16,7 +16,7 @@ export default function BrandPage({ triggerLoading }) {
   // 1. 인풋 상태 관리
   const [brandName, setBrandName] = useState("");
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]); // 💡 여러 개를 담기 위해 빈 배열로 초기화!
 
   // 2. 모달 상태 관리
   const [showWarningModal, setShowWarningModal] = useState(false);
@@ -28,7 +28,8 @@ export default function BrandPage({ triggerLoading }) {
   const [tempAIResult, setTempAIResult] = useState(null);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    // 유저가 선택한 파일 여러 개를 리액트 주머니(배열)에 통째로 저장
+    setFiles(Array.from(e.target.files));
   };
 
   const handleSaveClick = (e) => {
@@ -117,12 +118,36 @@ export default function BrandPage({ triggerLoading }) {
         <div className="input-group">
           <label>첨부 파일</label>
           <div className="file-upload-zone">
-            <input type="file" accept=".pdf" id="pdf-upload" onChange={handleFileChange} hidden />
+            <input type="file" accept=".pdf" id="pdf-upload" onChange={handleFileChange} multiple hidden /> 
             <label htmlFor="pdf-upload" className="upload-label">
               <div className="upload-icon-box"> 
                 <img src={fileIcon} alt ="fileIcon" className="fileIcon" />
               </div>
-              <span>{file ? file.name : "클릭하여 파일을 업로드하세요."}</span>
+              <div className="upload-label-text">
+                {files.length > 0 ? (
+                  <div className="file-summary-wrapper">
+                    {/* 🌟 1. 진짜 파일 이름들만 이 안에서 안전하게 말줄임(...) 처리를 합니다 */}
+                    <div className="file-names-ellipsis-zone">
+                      {files.slice(0, 3).map((file, index) => (
+                        <span key={index} className="file-name-item">
+                          {file.name}
+                          {/* 3개 중 마지막이거나 전체 파일이 3개 이하일 때의 마지막 쉼표 방지 */}
+                          {index < files.slice(0, 3).length - 1 && ", "}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* 🌟 2. '외 N개'는 말줄임 구역 밖에 둠으로써 무조건 눈에 보이게 고정합니다 */}
+                    {files.length > 3 && (
+                      <span className="file-count-extra">
+                        외 {files.length - 3}개
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <span>클릭하여 파일을 업로드하세요.</span>
+                )}
+              </div>
             </label>
           </div>
         </div>
