@@ -1,44 +1,42 @@
-/* 1. 전체 페이지 레이아웃 (베이지 톤 배경) */
-.brand-page-container {
+/* 1. 전체 페이지 레이아웃 */
+.create-page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 80vh;
-  background-color: #F7F0E6; /* 베이지 배경 */
+  background-color: #F7F0E6; /* 따뜻한 베이지 배경 통일 */
   font-family: 'Pretendard', -apple-system, sans-serif;
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* 2. 중앙 브랜드 카드 박스 */
-.brand-card {
+/* 2. 중앙 게시글 카드 박스 */
+.create-card {
   background: #F7F0E6;
-  border: 1px solid #70452B; /* 부드러운 갈색 테두리 */
-  border-radius: 8px; /* 둥근 모서리 */
+  border: 1px solid #70452B; 
+  border-radius: 8px; /* 목업 기준 더 부드럽게 둥근 테두리 적용 */
   padding: 40px;
-  /*width: 100%;*/
   width: 485px;
-  height: 672px;
-  max-width: 500px; /* 목업 비율에 맞춘 너비 */
+  min-height: 672px;
+  max-width: 500px; 
   box-shadow: 0 4px 12px 0 rgba(112, 69, 43, 0.6);
   box-sizing: border-box;
-
-  /* 숫자를 키울수록 카드가 더 아래로 내려감 */
   margin-top: 75px;
+  position: relative;
 }
 
 /* 카드 제목 */
 .card-title {
   text-align: center;
-  color: #70452B; /* 브랜드 정보 컬러 */
+  color: #70452B; 
   font-size: 24px;
   font-weight: 800;
   margin-top: 0;
   margin-bottom: 30px;
 }
 
-/* 3. 입력 폼 그룹 (이름, 설명, 파일) */
+/* 3. 입력 폼 그룹 */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -47,50 +45,67 @@
 }
 
 .input-group label {
-  color: #70452B; /* 브랜드 이름, 브랜드 설명, 첨부 파일 컬러 */
+  color: #70452B; 
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 5px;
 }
 
-/* 텍스트 인풋 & 텍스트 에어리어 공통 스타일 */
-.input-group input[type="text"],
+/* SNS 체크박스 가로 정렬 라인 */
+.checkbox-group {
+  display: flex;
+  gap: 20px;
+  padding: 5px 0;
+}
+
+/* 공통 체크박스 라벨 컴포넌트 */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #70452B;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 이미지 속 사각 체크박스 커스텀 테두리 감성 */
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #70452B; /* 체크 시 브랜드 시그니처 갈색으로 칠해짐 */
+  border: 1.5px solid #70452B;
+  cursor: pointer;
+}
+
+/* 텍스트 에어리어 스타일 */
 .input-group textarea {
   width: 100%;
   padding: 14px 16px;
-  border: 1.5px solid #D6C9BE;
+  border: 1.5px solid #A8927A;
   border-radius: 12px;
   font-size: 15px;
   background-color: #FAFAFA;
   color: #333;
-  border-color: #A8927A;
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
-}
-/* 일반 input과 textarea의 placeholder 색상 지정 */
-.input-group input[type="text"]::placeholder,
-.input-group textarea::placeholder {
-  color: #B5A191;
-  opacity: 1; /* 브라우저 기본 투명도 설정을 해제하여 선명하게 나오도록 함 */
+  height: 140px;
+  resize: none;
 }
 
-/* 포커스 되었을 때 테두리 색상 변경 */
-.input-group input[type="text"]:focus,
+.input-group textarea::placeholder {
+  color: #B5A191;
+  opacity: 1;
+}
+
 .input-group textarea:focus {
   border-color: #71432A;
   background-color: #ffffff;
 }
 
-.input-group input[type="text"]:hover,
 .input-group textarea:hover {
   background-color: #F1ECE6;
-}
-
-/* 브랜드 설명창 높이 고정 */
-.input-group textarea {
-  height: 120px;
-  resize: none;
 }
 
 /* 4. 파일 업로드 점선 박스 영역 */
@@ -106,9 +121,8 @@
   justify-content: center;
   gap: 12px;
   width: 100%;
-
-  height: 190px; /*컨테이너 세로길이*/
-  border: 2px dashed #A8927A; /* 점선 테두리 */
+  height: 190px; 
+  border: 2px dashed #A8927A; 
   border-radius: 16px;
   background-color: #FAF8F5;
   cursor: pointer;
@@ -119,6 +133,7 @@
   background-color: #F1ECE6;
 }
 
+/* 이미지의 상자형 인박스 아키텍처 재현 */
 .upload-icon-box {
   font-size: 24px;
   background-color: #EEF2F6;
@@ -134,66 +149,78 @@
   padding: 0 10px;
 }
 
-/* 5. 우측 하단 [저장하기] 버튼 */
-.save-button {
-  align-self: flex-end; /* 우측 정렬 */
+/* 하단 이미지 함께 생성 옵션 바 */
+.bottom-option-zone {
   margin-top: 20px;
-  margin-right: calc(50% - 250px); /* 카드 위치에 맞춘 우측 배치 */
+  padding-top: 10px;
+}
+
+.option-text {
+  font-weight: 700;
+  color: #70452B;
+}
+
+/* 5. 우측 하단 [생성하기] 캡슐형 버튼 */
+.create-button {
+  align-self: flex-end; 
+  margin-top: 20px;
+  margin-right: calc(50% - 250px); 
   background-color: #614736; 
   color: #F7F0E6;
   border: none;
-  border-radius: 28px;
+  border-radius: 28px; /* 목업의 완벽하게 둥근 모서리 */
   padding: 12px 32px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(97, 71, 54, 0.2);
+  box-shadow: 0 4px 12px rgba(97, 71, 54, 0.3);
   display: flex;
   align-items: center;
   gap: 10px;
   transition: all 0.2s ease;
 }
 
-.save-button:hover {
+.create-button:hover {
   background-color: #4A3528;
   transform: translateY(-1px);
 }
 
-/* 모바일 화면 대응 (Responsive) */
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 모바일 대응 */
 @media (max-width: 540px) {
-  .save-button {
+  .create-button {
     align-self: center;
     margin-right: 0;
     width: 100%;
     max-width: 500px;
+    justify-content: center;
   }
 }
 
 /* ==========================================================================
-   6. 모달창 (Modal) 디자인 영역
+   6. 모달창 (Modal) 영역
    ========================================================================== */
-
-/* 모달 배경 흐리게 처리 (뒷 배경 클릭 차단) */
 .modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(97, 71, 54, 0.4); /* 브라운 톤 투명 배경 */
-  backdrop-filter: blur(4px); /* 뒷 배경 흐림 효과 (고급스러움) */
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(97, 71, 54, 0.4); 
+  backdrop-filter: blur(4px); 
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   z-index: 999;
 }
 
-/* 모달 몸체 */
 .modal-content {
   background: #ffffff;
-  padding: 30px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 30px 20px;
   border-radius: 20px;
   width: 90%;
   max-width: 400px;
@@ -217,7 +244,6 @@
   margin-bottom: 15px;
 }
 
-/* 모달 버튼 기본 스타일 */
 .modal-btn {
   padding: 10px 24px;
   font-size: 14px;
@@ -228,17 +254,12 @@
   transition: background-color 0.2s;
 }
 
-/* 입력확인 모달 - 확인 버튼 */
 .modal-content > .modal-btn {
   background-color: #614736;
   color: #fff;
   width: 100%;
 }
-.modal-content > .modal-btn:hover {
-  background-color: #412e23;
-}
 
-/* 승인창 버튼 그룹 */
 .modal-btn-group {
   display: flex;
   gap: 12px;
@@ -250,27 +271,12 @@
   color: #fff;
 }
 
-.modal-btn.confirm:hover {
-  background-color: #412e23;
-}
-
 .modal-btn.cancel {
   background-color: #E6E1DA;
-  color: #7A6652; /*분석 시작 모달 - 취소 버튼 텍스트 컬러*/
+  color: #7A6652;
 }
 
-.modal-btn.cancel:hover {
-  background-color: #D6C9BE;
-}
-
-/* 모달 등장 애니메이션 */
 @keyframes modalPop {
-  from {
-    transform: translateY(15px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
