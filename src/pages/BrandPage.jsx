@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./BrandPage.css"; 
+import fileIcon from "../assets/file-icon.png";
+
 
 //function BrandPage() {
   //return <h1>브랜드 정보 입력 화면</h1>;
@@ -87,7 +89,9 @@ export default function BrandPage() {
           <div className="file-upload-zone">
             <input type="file" accept=".pdf" id="pdf-upload" onChange={handleFileChange} hidden />
             <label htmlFor="pdf-upload" className="upload-label">
-              <div className="upload-icon">📁</div>
+              <div className="upload-icon-box"> 
+                <img src={fileIcon} alt ="fileIcon" className="fileIcon" />
+              </div>
               <span>{file ? file.name : "클릭하여 파일을 업로드하세요."}</span>
             </label>
           </div>
