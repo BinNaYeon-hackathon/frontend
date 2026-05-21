@@ -84,13 +84,8 @@
 }
 
 .preview-submit {
-  position: absolute;
-
-  right: 50px;
-  bottom: 46px;
-
-  width: auto;
-  height: 80px;
-
+  display: flex;
+  width: 485px;
+  justify-content: end;
   cursor: pointer;
 }
