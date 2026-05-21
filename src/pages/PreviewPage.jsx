@@ -9,7 +9,7 @@ import LinkedInPost from "../components/LinkedInPost";
 import Button from "../components/Button";
 
 function PreviewPage() {
-  const [tab, setTab] = useState("instagram");
+  const [tab, setTab] = useState("");
 
   const [project, setProject] = useState(null);
 
@@ -58,6 +58,10 @@ function PreviewPage() {
       };
 
       setProject(data);
+
+      if (data.data.length > 0) {
+        setTab(data.data[0].platform);
+      }
     }
 
     fetchPosts();
@@ -68,6 +72,10 @@ function PreviewPage() {
   }
 
   const currentPost = project.data.find((post) => post.platform === tab);
+
+  if (!currentPost) {
+    return null;
+  }
 
   const handleContentChange = (value) => {
     setProject((prev) => ({
@@ -109,6 +117,12 @@ function PreviewPage() {
     }
   };
 
+  const platformLabels = {
+    instagram: "Instagram",
+    x: "X",
+    linkedin: "LinkedIn",
+  };
+
   const components = {
     instagram: InstagramPost,
     x: XPost,
@@ -127,26 +141,17 @@ function PreviewPage() {
 
       <div className="preview-card">
         <div className="tab-bar">
-          <button
-            className={tab === "instagram" ? "tab-button active" : "tab-button"}
-            onClick={() => setTab("instagram")}
-          >
-            Instagram
-          </button>
-
-          <button
-            className={tab === "x" ? "tab-button active" : "tab-button"}
-            onClick={() => setTab("x")}
-          >
-            X
-          </button>
-
-          <button
-            className={tab === "linkedin" ? "tab-button active" : "tab-button"}
-            onClick={() => setTab("linkedin")}
-          >
-            LinkedIn
-          </button>
+          {project.data.map((post) => (
+            <button
+              key={post.platform}
+              className={
+                tab === post.platform ? "tab-button active" : "tab-button"
+              }
+              onClick={() => setTab(post.platform)}
+            >
+              {platformLabels[post.platform]}
+            </button>
+          ))}
         </div>
 
         <div className="preview-content">
