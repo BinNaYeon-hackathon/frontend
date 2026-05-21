@@ -124,32 +124,33 @@ export default function CreatePage({ triggerLoading }) {
                 <img src={fileIcon} alt="fileIcon" className="fileIcon" />
               </div>
               {/* 💡 파일 이름들과 외 N개가 절대 깨지지 않는 무적의 레이아웃 구역 */}
-            <div className="upload-label-text">
-              {files.length > 0 ? (
-                <div className="create-file-summary-wrapper">
-                  {/* 오직 파일 이름들만 묶어서 한 줄 말줄임표(...) 처리 */}
-                  <div className="create-file-names-ellipsis-zone">
-                    {files.slice(0, 3).map((f, index) => (
-                      <span key={index} className="create-file-name-item">
-                        {f.name}
-                        {index < files.slice(0, 3).length - 1 && ", "}
+              <div className="upload-label-text">
+                {files.length > 0 ? (
+                  <div className="create-file-summary-wrapper">
+                    {/* 오직 파일 이름들만 묶어서 한 줄 말줄임표(...) 처리 */}
+                    <div className="create-file-names-ellipsis-zone">
+                      {files.slice(0, 3).map((f, index) => (
+                        <span key={index} className="create-file-name-item">
+                          {f.name}
+                          {index < files.slice(0, 3).length - 1 && ", "}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {/* 3개를 넘어가면 '외 N개' 텍스트를 오른쪽에 빡 고정 */}
+                    {files.length > 3 && (
+                      <span className="create-file-count-extra">
+                        외 {files.length - 3}개
                       </span>
-                    ))}
+                    )}
                   </div>
-                  
-                  {/* 3개를 넘어가면 '외 N개' 텍스트를 오른쪽에 빡 고정 */}
-                  {files.length > 3 && (
-                    <span className="create-file-count-extra">
-                      외 {files.length - 3}개
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <span className="create-upload-placeholder">클릭하여 파일을 업로드하세요.</span>
-              )}
-            </div>
-          </label>
-        </div>
+                ) : (
+                  <span className="create-upload-placeholder">클릭하여 파일을 업로드하세요.</span>
+                )}
+              </div>
+            </label>{/*  label 태그 정상 종료 */}
+          </div>{/* file-upload-zone 종료 */}
+        </div>{/* input-group 종료 */}
 
         {/* 이미지와 함께 생성하기 하단 토글 */}
         <div className="bottom-option-zone">
@@ -162,7 +163,7 @@ export default function CreatePage({ triggerLoading }) {
             <span className="option-text">이미지와 함께 생성하기</span>
           </label>
         </div>
-      </div>
+      </div> {/* 💡 create-card가 모든 입력 영역을 감싸고 여기서 깔끔하게 닫힙니다! */}
 
       {/* 우측 하단 생성하기 화살표 버튼 */}
       <button type="button" className="create-button" onClick={handleCreateClick}>
@@ -195,6 +196,5 @@ export default function CreatePage({ triggerLoading }) {
         </div>
       )}
     </div>
-  </div>
   );
 }
