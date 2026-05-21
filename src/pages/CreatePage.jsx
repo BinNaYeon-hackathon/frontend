@@ -19,7 +19,7 @@ export default function CreatePage({ triggerLoading }) {
     LinkedIn: false,
   });
   const [postContent, setPostContent] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]); // 💡 여러 개를 담기 위해 빈 배열로 변경!
   const [withImage, setWithImage] = useState(false); // 기본 체크 상태
 
   // 2. 모달 상태 관리
@@ -35,7 +35,8 @@ export default function CreatePage({ triggerLoading }) {
   };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    // 유저가 고른 여러 개의 파일을 리액트 주머니에 배열로 쏙 담기
+    setFiles(Array.from(e.target.files));
   };
 
   const handleCreateClick = (e) => {
@@ -62,7 +63,7 @@ export default function CreatePage({ triggerLoading }) {
       content: postContent,
       hashtags: brandProfile.toneAdjectives || ["트렌디"],
       withImage: withImage,
-      uploadedFileName: file ? file.name : null,
+      files: files.map(f => f.name), // 💡 업로드된 파일 이름들의 배열로 세팅!
       selectedPlatforms: Object.keys(selectedPlatforms).filter(k => selectedPlatforms[k]),
       createdAt: new Date().toISOString()
     };
@@ -110,15 +111,44 @@ export default function CreatePage({ triggerLoading }) {
         <div className="input-group">
           <label>첨부 파일</label>
           <div className="file-upload-zone">
-            <input type="file" id="post-file-upload" onChange={handleFileChange} hidden />
+            {/* 💡 multiple 속성을 추가해서 다중 선택이 가능하게 만듭니다! */}
+            <input 
+              type="file" 
+              id="post-file-upload" 
+              onChange={handleFileChange} 
+              multiple 
+              hidden 
+            />
             <label htmlFor="post-file-upload" className="upload-label">
-              {/* 이미지 속 박스형 클라우드 업로드 아이콘 느낌 재현 */}
               <div className="upload-icon-box">
-                 <img src={fileIcon} alt ="fileIcon" className="fileIcon" />
+                <img src={fileIcon} alt="fileIcon" className="fileIcon" />
               </div>
-              <span>{file ? file.name : "클릭하여 파일을 업로드하세요."}</span>
-            </label>
-          </div>
+              {/* 💡 파일 이름들과 외 N개가 절대 깨지지 않는 무적의 레이아웃 구역 */}
+            <div className="upload-label-text">
+              {files.length > 0 ? (
+                <div className="create-file-summary-wrapper">
+                  {/* 오직 파일 이름들만 묶어서 한 줄 말줄임표(...) 처리 */}
+                  <div className="create-file-names-ellipsis-zone">
+                    {files.slice(0, 3).map((f, index) => (
+                      <span key={index} className="create-file-name-item">
+                        {f.name}
+                        {index < files.slice(0, 3).length - 1 && ", "}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* 3개를 넘어가면 '외 N개' 텍스트를 오른쪽에 빡 고정 */}
+                  {files.length > 3 && (
+                    <span className="create-file-count-extra">
+                      외 {files.length - 3}개
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <span className="create-upload-placeholder">클릭하여 파일을 업로드하세요.</span>
+              )}
+            </div>
+          </label>
         </div>
 
         {/* 이미지와 함께 생성하기 하단 토글 */}
@@ -165,5 +195,6 @@ export default function CreatePage({ triggerLoading }) {
         </div>
       )}
     </div>
+  </div>
   );
 }

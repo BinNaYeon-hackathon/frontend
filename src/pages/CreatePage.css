@@ -133,6 +133,53 @@
   background-color: #F1ECE6;
 }
 
+/* 파일 이름과 외 N개를 가로로 예쁘게 정렬해주는 바구니 */
+.create-file-summary-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 280px;       /* 점선 박스 너비 안에서 안전하게 가두기 */
+  margin: 0 auto;
+}
+
+/* 오직 파일 이름들만 묶어서 한 줄로 가다가 맨 끝만 '...' 마감하는 구역 */
+.create-file-names-ellipsis-zone {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;         /* 외 N개가 들어오면 자리를 비켜주며 스스로 축소 */
+  font-size: 14px;
+  color: #7A6652;
+  font-weight: 500;
+}
+
+/* 개별 파일 이름 기본 스타일 (패딩 충돌 완벽 차단) */
+span.create-file-name-item {
+  font-size: 14px;
+  color: #7A6652;
+  font-weight: 500;
+  padding: 0 2px !important; /* 기존 span에 걸린 패딩 억지로 박살내기 */
+}
+
+/* '외 N개' 가 절대 숨지 않고 무조건 노출되게 만드는 핵심 가드 */
+span.create-file-count-extra {
+  font-size: 14px;
+  color: #7A6652;
+  font-weight: 700;       /* 두껍게 줘서 가독성 확보 */
+  flex-shrink: 0;         /* 공간이 부족해도 절대로 찌그러지지 마라! */
+  margin-left: 6px;       /* 쉼표와의 미세한 간격 */
+  padding: 0 !important;
+  white-space: nowrap;
+}
+
+/* 기본 안내 문구 스타일 보장 */
+.create-upload-placeholder {
+  font-size: 14px;
+  color: #7A6652;
+  font-weight: 500;
+}
+
 /* 이미지의 상자형 인박스 아키텍처 재현 */
 .upload-icon-box {
   font-size: 24px;
