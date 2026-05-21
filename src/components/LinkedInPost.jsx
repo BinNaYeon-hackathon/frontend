@@ -63,6 +63,7 @@ export default function LinkedInPost({
 
       <div className="linkedin-content-section">
         <textarea
+          id="linkedin-content"
           ref={textareaRef}
           className="linkedin-content-input"
           value={content}
