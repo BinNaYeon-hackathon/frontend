@@ -55,6 +55,7 @@ export default function XPost({
           </div>
 
           <textarea
+            id="x-content"
             ref={textareaRef}
             className="x-content"
             value={content}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./PreviewPage.css";
 
@@ -12,10 +13,11 @@ function PreviewPage() {
 
   const [project, setProject] = useState(null);
 
+  const navigate = useNavigate();
+
   // 데이터 fetch 예시
   useEffect(() => {
     async function fetchPosts() {
-      // 실제 API 연결 시:
       // const response = await fetch("/api/posts");
       // const data = await response.json();
       const data = {
@@ -84,22 +86,27 @@ function PreviewPage() {
   };
 
   const handlePublish = async () => {
-    // try {
-    //   const response = await fetch("/api/posts", {
-    //     method: "PATCH",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(project),
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error("게시 실패");
-    //   }
-    //   alert("게시물이 저장되었습니다.");
-    // } catch (error) {
-    //   console.error(error);
-    //   alert("오류가 발생했습니다.");
-    // }
+    try {
+      const response = await fetch(`/api/temp-posts?platform=${tab}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          body: currentPost.body,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("게시 실패");
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+
+      alert("오류가 발생했습니다.");
+    }
   };
 
   const components = {

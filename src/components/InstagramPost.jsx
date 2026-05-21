@@ -129,6 +129,7 @@ export default function InstagramPost({
           <span className="brand-name-text">{brandName}</span>
 
           <textarea
+            id="instagram-content"
             ref={textareaRef}
             className="instagram-content-input"
             value={content}
