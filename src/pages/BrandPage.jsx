@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./BrandPage.css"; 
 import fileIcon from "../assets/file-icon.png";
 
-
 //function BrandPage() {
   //return <h1>브랜드 정보 입력 화면</h1>;
 //}
 //export default BrandPage;
 
 
-export default function BrandPage() {
+export default function BrandPage({ triggerLoading }) {
   const navigate = useNavigate();
 
   // 1. 인풋 상태 관리
@@ -40,7 +39,10 @@ export default function BrandPage() {
   };
 
   const handleConfirmNext = () => {
-    setShowConfirmModal(false);
+    setShowConfirmModal(false); // 승인 모달 닫기
+
+    //내 로컬 스위치 대신, App.jsx가 준 전역 스위치를 켭니다!
+    triggerLoading(true, "브랜드 정보 분석 중 ...");
 
     // 나중에 n8n 연동 전까지 서비스를 굴릴 가상의 AI 분석 결과 데이터 (MySQL 명세서 기준)
     const mockAIResult = {
@@ -55,9 +57,12 @@ export default function BrandPage() {
       sentenceLengthRule: "짧고 강한 문장",
       sourceSummary: "브랜드 문서 분석 완료"
     };
-
-    // ➔ 가방(state)에 AI 결과 데이터를 담아서 '게시글 생성(create)' 페이지로 이동!
-    navigate("/create", { state: { brandProfile: mockAIResult } });
+    //연동 연출을 보여주기 위해 3초(3000ms) 뒤 실행
+    setTimeout(() => {
+      //3초 뒤에 전역 로딩을 끄고 화면을 이동시킵니다
+      triggerLoading(false); 
+      navigate("/create", { state: { brandProfile: mockAIResult } }); //가방(state)에 AI 결과 데이터를 담아서 '게시글 생성(create)' 페이지로 이동!
+    }, 3000);
   };
 
   return (
