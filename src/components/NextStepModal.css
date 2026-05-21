@@ -1,0 +1,60 @@
+.next-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #F7F0E6; /* 목업의 베이지 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* 로고(1050)보다 낮게 설정하여 로고를 살림 */
+}
+
+.next-modal-content {
+  background: #F7F0E6; /* 배경과 일체감 있는 톤 */
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid #70452B; /* 얇은 갈색 테두리 */
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 4px 5px -2px rgba(112, 69, 43, 0.6);
+}
+
+.next-modal-text {
+  color: #70452B;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 30px;
+}
+
+.next-modal-btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* 캡슐형 버튼 스타일 */
+.next-modal-btn {
+  padding: 12px 40px;
+  border-radius: 30px; /* 완벽하게 둥근 캡슐형 */
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 네, 아니요 버튼 (진한 브라운) */
+.next-modal-btn.confirm,
+.next-modal-btn.cancel{
+  background-color: #70452B;
+  color: #ffffff;
+}
+
+.next-modal-btn.confirm:hover,
+.next-modal-btn.cancel:hover {
+  background-color: #4A3528;
+}

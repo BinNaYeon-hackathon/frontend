@@ -19,6 +19,7 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  padding-bottom: 120px;  /*숫자가 커질수록 로딩창이 더 위로*/  
 }
 
 /* 로딩 텍스트 */

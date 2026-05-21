@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./BrandPage.css"; 
 import fileIcon from "../assets/file-icon.png";
+import NextStepModal from "../components/NextStepModal"; //모달 가져오기
 
 //function BrandPage() {
   //return <h1>브랜드 정보 입력 화면</h1>;
@@ -20,6 +21,11 @@ export default function BrandPage({ triggerLoading }) {
   // 2. 모달 상태 관리
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  //3. 다음 단계 질문 모달을 띄울지 결정하는 상태
+  const [showNextStepModal, setShowNextStepModal] = useState(false);
+  //나중에 이동할 때 쓸 데이터를 임시 보관할 주머니
+  const [tempAIResult, setTempAIResult] = useState(null);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -59,14 +65,33 @@ export default function BrandPage({ triggerLoading }) {
     };
     //연동 연출을 보여주기 위해 3초(3000ms) 뒤 실행
     setTimeout(() => {
-      //3초 뒤에 전역 로딩을 끄고 화면을 이동시킵니다
-      triggerLoading(false); 
-      navigate("/create", { state: { brandProfile: mockAIResult } }); //가방(state)에 AI 결과 데이터를 담아서 '게시글 생성(create)' 페이지로 이동!
-    }, 3000);
-  };
+        //3초 뒤에 전역 로딩을 끄고 화면을 이동시킵니다
+        triggerLoading(false); 
+        //바로 navigate x 데이터를 저장한 뒤 질문 모달을 띄우기
+        setTempAIResult(mockAIResult);
+        setShowNextStepModal(true);
+      }, 3000);
+    };
+    //"네"를 눌렀을 때 실행될 함수
+    const handleGoToCreate = () => {
+      setShowNextStepModal(false);
+      navigate("/create", { state: { brandProfile: tempAIResult } });
+    };
+
+    // "아니요"를 눌렀을 때 실행될 함수
+    const handleGoHome = () => {
+      setShowNextStepModal(false);
+      navigate("/"); // 홈으로 이동
+    };
+  
 
   return (
     <div className="brand-page-container">
+      {/*질문 모달 렌더링 조건 */}
+      {showNextStepModal && (
+        <NextStepModal onConfirm={handleGoToCreate} onCancel={handleGoHome} />
+      )}
+
       <div className="brand-card">
         <h2 className="card-title">브랜드 정보</h2>
 
