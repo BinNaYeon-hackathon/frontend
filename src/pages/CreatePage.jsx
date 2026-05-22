@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import "./CreatePage.css";
+
 import fileIcon from "../assets/file-icon.png";
 import arrowRight from "../assets/arrow-circle-right.png";
 
@@ -10,6 +12,7 @@ export default function CreatePage({ triggerLoading }) {
 
   // BrandPage에서 전달받은 브랜드 정보
   const brandProfile = location.state?.brandProfile || {};
+
   const brandId = brandProfile.brandId;
   const brandName = brandProfile.brandName || "Brandname";
 
@@ -21,11 +24,14 @@ export default function CreatePage({ triggerLoading }) {
   });
 
   const [postContent, setPostContent] = useState("");
+
   const [files, setFiles] = useState([]);
+
   const [withImage, setWithImage] = useState(false);
 
   // 모달 상태
   const [showWarningModal, setShowWarningModal] = useState(false);
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // 플랫폼 선택
@@ -65,10 +71,12 @@ export default function CreatePage({ triggerLoading }) {
     triggerLoading(true, "게시물 생성 중 ...");
 
     try {
-      // 선택 플랫폼 배열화
-      const platforms = Object.keys(selectedPlatforms).filter(
-        (k) => selectedPlatforms[k],
-      );
+      // 플랫폼 배열
+      const platforms = [
+        ...new Set(
+          Object.keys(selectedPlatforms).filter((k) => selectedPlatforms[k]),
+        ),
+      ];
 
       // ==========================================================
       // 1️⃣ 이미지 업로드 → S3 URL 획득
@@ -97,6 +105,9 @@ export default function CreatePage({ triggerLoading }) {
 
         const uploadResult = await uploadResponse.json();
 
+        console.log("S3 업로드 응답:", uploadResult);
+
+        // 단일 image_url 사용
         uploadedImageUrl = uploadResult.image_url || "";
       }
 
@@ -106,24 +117,30 @@ export default function CreatePage({ triggerLoading }) {
 
       const requestBody = {
         platforms,
+
         body: postContent,
+
         withImage,
+
         brandName,
+
         brandId,
 
-        // 🔥 업로드된 이미지 URL 포함
+        // S3 URL 전달
         image_url: uploadedImageUrl,
       };
 
-      console.log("게시글 생성 요청 바디:", requestBody);
+      console.log("게시글 생성 요청:", requestBody);
 
       const response = await fetch(
         "http://localhost:5678/webhook-test/temp-posts/generate",
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify(requestBody),
         },
       );
@@ -132,81 +149,21 @@ export default function CreatePage({ triggerLoading }) {
         throw new Error("게시글 생성 서버 통신 실패");
       }
 
-      // ==========================================================
-      // 3️⃣ 응답 수신
-      // ==========================================================
+      const jsonResponse = await response.json();
 
-      const textResponse = await response.text();
-
-      let jsonResponse = textResponse
-        ? JSON.parse(textResponse)
-        : { success: true, data: [] };
+      console.log("게시글 생성 응답:", jsonResponse);
 
       // ==========================================================
-      // 🔥 방어용 임시 데이터
-      // ==========================================================
-
-      if (
-        !jsonResponse.success ||
-        !jsonResponse.data ||
-        jsonResponse.data.length === 0
-      ) {
-        jsonResponse = {
-          success: true,
-          data: [
-            {
-              brand_name: brandName,
-
-              body: `🤖 [AI 생성 카피라이팅]
-
-${brandName}과 함께하는 특별한 순간! ✨
-
-사용자가 입력한 '${postContent}' 기반으로 AI가 생성한 마케팅 문구입니다.`,
-
-              hashtags: ["해커톤", "AI마케팅", "Post4U", brandName],
-
-              image_url: uploadedImageUrl,
-
-              post_date: new Date().toISOString(),
-            },
-          ],
-        };
-      }
-
-      console.log("최종 게시글 생성 응답:", jsonResponse);
-
-      // ==========================================================
-      // 4️⃣ Preview 페이지 이동
+      // 3️⃣ Preview 페이지 이동
       // ==========================================================
 
       if (jsonResponse.success) {
         triggerLoading(false);
 
-        const serverGeneratedData = jsonResponse.data?.[0] || {};
-
-        const finalPostData = {
-          brandName: serverGeneratedData.brand_name || brandName,
-
-          content: serverGeneratedData.body || postContent,
-
-          hashtags: serverGeneratedData.hashtags || ["트렌디"],
-
-          imageUrl: serverGeneratedData.image_url || uploadedImageUrl || "",
-
-          withImage,
-
-          selectedPlatforms: platforms,
-
-          createdAt: serverGeneratedData.post_date || new Date().toISOString(),
-        };
-
-        navigate("/preview", {
-          state: {
-            postData: finalPostData,
-          },
-        });
+        // 🔥 데이터 전달 없이 이동
+        navigate("/preview");
       } else {
-        throw new Error(jsonResponse.message || "생성 실패");
+        throw new Error(jsonResponse.message || "게시글 생성 실패");
       }
     } catch (error) {
       console.error("게시글 생성 연동 에러:", error);
@@ -278,7 +235,10 @@ ${brandName}과 함께하는 특별한 순간! ✨
                   <div className="create-file-summary-wrapper">
                     <div className="create-file-names-ellipsis-zone">
                       {files.slice(0, 3).map((f, index) => (
-                        <span key={index} className="create-file-name-item">
+                        <span
+                          key={`${f.name}-${index}`}
+                          className="create-file-name-item"
+                        >
                           {f.name}
 
                           {index < files.slice(0, 3).length - 1 && ", "}
