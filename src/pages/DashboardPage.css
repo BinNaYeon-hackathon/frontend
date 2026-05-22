@@ -1,0 +1,80 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: -10px;
+
+  padding-top: 30px;
+}
+
+/* Section */
+.dashboard-post-section {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: -8px;
+  align-items: center;
+}
+
+.dashboard-post-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #70452b;
+}
+
+/* Tabs */
+.dashboard-tab-section {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  padding: 6px 12px;
+  border: 1px solid #b08363;
+  background: #ffff;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #70452b;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.tab.active {
+  background: #b08363;
+  color: #ffff;
+}
+
+.records-section {
+  padding: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 664px;
+}
+.post-records {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.empty {
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* button */
+.dashboard-button-wrapper {
+  margin-top: 20px;
+}

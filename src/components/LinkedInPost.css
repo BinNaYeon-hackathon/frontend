@@ -3,6 +3,8 @@
   max-height: 624px;
   background: #ffffff;
   overflow: hidden;
+
+  border-radius: 8px;
 }
 
 .linkedin-header {

@@ -1,0 +1,25 @@
+.home-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;
+}
+
+.home-logo-image {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.home-logo {
+  width: auto;
+  height: 280px;
+}
+
+.home-submit {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

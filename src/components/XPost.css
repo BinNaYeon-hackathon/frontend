@@ -2,6 +2,8 @@
   width: 485px;
   max-height: 624px;
   padding: 12px 16px;
+  background-color: #ffff;
+  border-radius: 8px;
 }
 
 .x-layout {
