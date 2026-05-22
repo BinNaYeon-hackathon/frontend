@@ -158,7 +158,7 @@ export default function BrandPage({ triggerLoading }) {
   //모달에서 "아니요"를 눌렀을 때 실행될 함수 (컴포넌트 내부에 안전하게 배치)
   const handleGoHome = () => {
     setShowNextStepModal(false);
-    navigate("/"); 
+    navigate("/dashboard"); 
   };
   
 
