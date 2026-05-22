@@ -18,44 +18,10 @@ function PreviewPage() {
   // 데이터 fetch 예시
   useEffect(() => {
     async function fetchPosts() {
-      // const response = await fetch("/api/posts");
-      // const data = await response.json();
-      const data = {
-        success: true,
-        message: "",
-
-        data: [
-          {
-            platform: "instagram",
-            brand_name: "나이키",
-            post_date: "2026-05-20",
-            body: "신제품 출시 안내입니다.",
-            hashtags: ["신제품", "이벤트", "브랜드소식"],
-            image_url:
-              "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-          },
-
-          {
-            platform: "x",
-            brand_name: "나이키",
-            post_date: "2026-05-20",
-            body: "나이키 신제품 출시! 새로운 움직임을 지금 만나보세요.",
-            hashtags: ["신제품", "나이키"],
-            image_url:
-              "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
-          },
-
-          {
-            platform: "linkedin",
-            brand_name: "나이키",
-            post_date: "2026-05-20",
-            body: "나이키가 새로운 제품을 선보입니다. 이번 신제품은 더 나은 움직임과 일상의 퍼포먼스를 지원하기 위해 기획되었습니다.",
-            hashtags: ["Nike", "ProductLaunch", "BrandNews"],
-            image_url:
-              "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77",
-          },
-        ],
-      };
+      const response = await fetch(
+        "http://localhost:5678/webhook-test/temp-posts",
+      );
+      const data = await response.json();
 
       setProject(data);
 
@@ -95,15 +61,18 @@ function PreviewPage() {
 
   const handlePublish = async () => {
     try {
-      const response = await fetch(`/api/temp-posts?platform=${tab}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `http://localhost:5678/webhook-test/temp-posts?platform=${tab}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            body: currentPost.body,
+          }),
         },
-        body: JSON.stringify({
-          body: currentPost.body,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("게시 실패");
