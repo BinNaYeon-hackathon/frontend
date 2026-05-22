@@ -9,8 +9,10 @@ export default function CreatePage({ triggerLoading }) {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // BrandPage에서 넘겨받은 브랜드 정보 가방 열기 (없으면 빈 객체)
+  // 앞서 BrandPage에서 넘겨받은 brandId와 brandName 꺼내기(없으면 빈 객체)
   const brandProfile = location.state?.brandProfile || {};
+  const brandId = brandProfile.brandId; 
+  const brandName = brandProfile.brandName || "Brandname";
 
   // 1. 인풋 및 체크박스 상태 관리
   const [selectedPlatforms, setSelectedPlatforms] = useState({
@@ -19,8 +21,8 @@ export default function CreatePage({ triggerLoading }) {
     LinkedIn: false,
   });
   const [postContent, setPostContent] = useState("");
-  const [files, setFiles] = useState([]); // 💡 여러 개를 담기 위해 빈 배열로 변경!
-  const [withImage, setWithImage] = useState(false); // 기본 체크 상태
+  const [files, setFiles] = useState([]); // 업로드한 이미지 파일들을 담는 배열
+  const [withImage, setWithImage] = useState(false); //이미지 함께 생성하기 토글 스위치
 
   // 2. 모달 상태 관리
   const [showWarningModal, setShowWarningModal] = useState(false);
@@ -34,12 +36,12 @@ export default function CreatePage({ triggerLoading }) {
     }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e) => { //파일 선택 핸들러
     // 유저가 고른 여러 개의 파일을 리액트 주머니에 배열로 쏙 담기
     setFiles(Array.from(e.target.files));
   };
 
-  const handleCreateClick = (e) => {
+  const handleCreateClick = (e) => { // 생성하기 버튼 클릭 시 유효성 검사 및 컨펌 모달 띄우기
     e.preventDefault();
 
     // 하나 이상의 SNS가 선택되었는지, 내용이 입력되었는지 검사
@@ -52,27 +54,83 @@ export default function CreatePage({ triggerLoading }) {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmNext = () => {
+  // 🌟 [실시간 연동 구역] 모달에서 최종 확인 누르면 n8n 2번 워크플로우 호출
+  const handleConfirmNext = async () => {
     setShowConfirmModal(false);
+    triggerLoading(true, "게시물 생성 중 ..."); // App.jsx 전역 로딩 모달 켜기
 
-    triggerLoading(true, "게시물 생성 중 ...");
+    try {
+      // 이미지 전송을 위해 Multipart/FormData 가방 생성
+      const formData = new FormData();
+      
+      // n8n 2번 워크플로우(게시글 생성)가 요구하는 규격 그대로 Key값 append 수행
+      // 1. platforms: 배열을 JSON 문자열로 변환해 전송 (ex: ["Instagram"])
+      const platforms = Object.keys(selectedPlatforms).filter(k => selectedPlatforms[k]);
+      formData.append("platforms", JSON.stringify(platforms)); 
 
-    // 1번 팀원의 인스타그램 포스트 컴포넌트 규격에 맞춰 쏴줄 최종 데이터 주머니
-    const finalPostData = {
-      brandName: brandProfile.brandName || "Brandname",
-      content: postContent,
-      hashtags: brandProfile.toneAdjectives || ["트렌디"],
-      withImage: withImage,
-      files: files.map(f => f.name), // 💡 업로드된 파일 이름들의 배열로 세팅!
-      selectedPlatforms: Object.keys(selectedPlatforms).filter(k => selectedPlatforms[k]),
-      createdAt: new Date().toISOString()
-    };
+      // 2. body: 사용자가 입력한 날것의 글감 텍스트
+      formData.append("body", postContent); 
 
-    // 3초(3000ms) 동안 로딩창을 보여준 뒤 다음 페이지로 이동
-    setTimeout(() => {
-      triggerLoading(false); // 로딩창 끄기
-      navigate("/preview", { state: { postData: finalPostData } });// 최종 미리보기 페이지로 데이터 싣고 이동
-    }, 3000);
+      // 3. withImage: 이미지 생성 여부 스위치 (true / false)
+      formData.append("withImage", withImage);
+
+      // 4. files: 업로드한 진짜 이미지 파일들을 차곡차곡 담기
+      files.forEach((file) => {
+        formData.append("files", file); 
+      });
+
+      // 5. brandName: 브랜드 이름 전달
+      formData.append("brandName", brandName);
+
+      // 6. brandId: DB 조회를 위해 앞 장에서 받아온 가이드라인 번호표 매핑
+      if (brandId) {
+        formData.append("brandId", brandId);
+      }
+
+      //(IP 주소)에 연결된 2번 [게시글 생성 웹훅]으로 출발
+      //💡연동 시 localhost 자리에 실제 IP 주소(예: 192.168.0.XX)를 꼭 넣어줘야 함
+      const response = await fetch("http://localhost:5678/webhook/c5393a0f-9b8a-44a2-a2f5-7370f7191b19", {
+        method: "POST",
+        body: formData, // FormData 전송 시 Content-Type 헤더 수동 지정x, 브라우저가 자동 세팅
+      });
+
+      if (!response.ok) {
+        throw new Error("게시글 생성 서버 통신 실패");
+      }
+
+      // 백엔드가 돌려준 진짜 최종 완정작 데이터 수신
+      const jsonResponse = await response.json();
+      console.log("백엔드가 돌려준 게시글 생성 완료 응답:", jsonResponse);
+
+      if (jsonResponse.success) {
+        triggerLoading(false); // 로딩창 끄기
+
+        //n8n 'Build Final Response' 노드 규격에 맞춰 데이터 파싱
+        // data 배열 안의 첫 번째 결과 객체를 정밀 조준합니다.
+        const serverGeneratedData = jsonResponse.data?.[0] || {}; 
+
+        //미리 만들어 둔 인스타그램/소셜 포스트 컴포넌트 규격에 맞추어 보따리 재포장
+        const finalPostData = {
+          brandName: serverGeneratedData.brand_name || brandName, // 백엔드 결과물 내 브랜드명
+          content: serverGeneratedData.body || postContent,       // AI가 정제하여 새로 지어준 찐 마케팅 본문 문구
+          hashtags: serverGeneratedData.hashtags || ["트렌디"],     // AI가 톤앤매너에 맞게 추출해 준 해시태그 배열
+          imageUrl: serverGeneratedData.image_url || "",          // 🌟 제미나이가 그리고 S3에 올린 진짜 이미지 웹 링크!
+          withImage: withImage,
+          selectedPlatforms: platforms,
+          createdAt: serverGeneratedData.post_date || new Date().toISOString() // 백엔드가 찍어준 포스팅 날짜
+        };
+
+        // 최종 미리보기(/preview) 페이지로 완성된 데이터 바구니를 싣고 이동!
+        navigate("/preview", { state: { postData: finalPostData } });
+      } else {
+        throw new Error(jsonResponse.message || "생성 실패");
+      }
+
+    } catch (error) {
+      console.error("게시글 생성 연동 에러:", error);
+      triggerLoading(false);
+      alert("게시글 생성 중 서버 에러가 발생했습니다. b님의 n8n 2번 워크플로우가 대기 상태(Listen)인지 확인해 주세요!");
+    }
   };
 
   return (
@@ -114,6 +172,7 @@ export default function CreatePage({ triggerLoading }) {
             {/* 💡 multiple 속성을 추가해서 다중 선택이 가능하게 만듭니다! */}
             <input 
               type="file" 
+              accept="image/*" /*오직 이미지파일만*/
               id="post-file-upload" 
               onChange={handleFileChange} 
               multiple 
@@ -145,7 +204,7 @@ export default function CreatePage({ triggerLoading }) {
                     )}
                   </div>
                 ) : (
-                  <span className="create-upload-placeholder">클릭하여 파일을 업로드하세요.</span>
+                  <span className="create-upload-placeholder">클릭하여 이미지 파일을 업로드하세요.</span>
                 )}
               </div>
             </label>{/*  label 태그 정상 종료 */}

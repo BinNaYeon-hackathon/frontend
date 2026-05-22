@@ -174,7 +174,7 @@ export default function BrandPage({ triggerLoading }) {
                     )}
                   </div>
                 ) : (
-                  <span>클릭하여 파일을 업로드하세요.</span>
+                  <span>클릭하여 pdf 파일을 업로드하세요.</span>
                 )}
               </div>
             </label>
