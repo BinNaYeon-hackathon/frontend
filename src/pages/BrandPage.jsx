@@ -101,6 +101,28 @@ export default function BrandPage({ triggerLoading }) {
     }
   };
 
+  // const handleConfirmNext = () => {
+  //   setShowConfirmModal(false); // 1. "다음 단계로 넘어가시겠습니까" 컨펌 모달 닫기
+    
+  //   // 2. App.jsx의 전역 로딩창을 즉시 켭니다.
+  //   triggerLoading(true, "브랜드 정보 분석 중 ...");
+
+  //   // 3. 진짜 통신 대신, 3초(3000ms) 뒤에 성공한 것처럼 속이는 타이머 가동!
+  //   setTimeout(() => {
+  //     triggerLoading(false); // 3초 뒤 로딩창 끄기
+      
+  //     // 가짜 brandId 발급 시뮬레이션
+  //     setTempAIResult({
+  //       brandId: 999,
+  //       brandName: brandName || "테스트 브랜드"
+  //     });
+      
+  //     // 4. 드디어 보고 싶어 하셨던 최종 "게시글 생성으로 넘어가시겠습니까?" 질문 모달 열기!
+  //     setShowNextStepModal(true);
+  //   }, 3000);
+  // };
+  
+
   // 모달에서 "네"를 눌렀을 때 실행될 함수 (컴포넌트 내부에 안전하게 배치)
   const handleGoToCreate = () => {
     setShowNextStepModal(false);
@@ -202,7 +224,7 @@ export default function BrandPage({ triggerLoading }) {
         <div className="modal-backdrop" onClick={() => setShowConfirmModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>분석 시작</h3>
-            <p>게시글 생성 단계로 넘어가시겠습니까?</p>
+            <p>다음 단계로 넘어가시겠습니까? <br/>넘어가면 다시 수정할 수 없습니다.</p>
             <div className="modal-btn-group">
               <button className="modal-btn confirm" onClick={handleConfirmNext}>확인</button>
               <button className="modal-btn cancel" onClick={() => setShowConfirmModal(false)}>취소</button>
