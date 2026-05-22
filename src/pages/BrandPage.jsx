@@ -16,15 +16,14 @@ export default function BrandPage({ triggerLoading }) {
   // 1. 인풋 상태 관리
   const [brandName, setBrandName] = useState("");
   const [description, setDescription] = useState("");
-  const [files, setFiles] = useState([]); // 💡 여러 개를 담기 위해 빈 배열로 초기화!
+  const [files, setFiles] = useState([]); // 여러 개를 담기 위해 빈 배열로 초기화!
 
   // 2. 모달 상태 관리
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  //3. 다음 단계 질문 모달을 띄울지 결정하는 상태
+  //3. 다음 단계 질문 모달을 띄울지 결정하는 상태 및 데이터 주머니
   const [showNextStepModal, setShowNextStepModal] = useState(false);
-  //나중에 이동할 때 쓸 데이터를 임시 보관할 주머니
   const [tempAIResult, setTempAIResult] = useState(null);
 
   const handleFileChange = (e) => {
@@ -40,50 +39,80 @@ export default function BrandPage({ triggerLoading }) {
       setShowWarningModal(true);
       return;
     }
-
     // 조건 만족 시 ➔ 다음으로 넘어가시겠습니까 모달 열기
     setShowConfirmModal(true);
   };
 
-  const handleConfirmNext = () => {
+  // 🌟 실시간 n8n 웹훅 통신 및 응답 수신 함수
+  const handleConfirmNext = async () => {
     setShowConfirmModal(false); // 승인 모달 닫기
-
-    //내 로컬 스위치 대신, App.jsx가 준 전역 스위치를 켭니다!
+    //1. App.jsx가 전달해 준 전역 백그라운드 로딩창 켜기
     triggerLoading(true, "브랜드 정보 분석 중 ...");
+    
+    try {
+      // 2. Multipart/FormData 바구니 개설 (명세서 규격에 맞게 포장)
+      const formData = new FormData();
+      formData.append("brandName", brandName);
+      formData.append("description", description);
+      
+      // 유저가 선택한 여러 개의 파일들을 "files"라는 열쇠 이름으로 차곡차곡 담기
+      files.forEach((file) => {
+        formData.append("files", file); 
+      });
 
-    // 나중에 n8n 연동 전까지 서비스를 굴릴 가상의 AI 분석 결과 데이터 (MySQL 명세서 기준)
-    const mockAIResult = {
-      brandName: brandName,
-      brandDescription: description,
-      targetAudience: "20대 중심의 패션 커머스 유저층",
-      coreMessage: "도전과 스타일을 깨우는 브랜드",
-      toneAdjectives: ["힙한", "친근한", "트렌디한"],
-      frequentExpressions: ["오늘 뭐 입지", "트렌드", "패션 놀이터"],
-      forbiddenExpressions: ["최저가", "싸구려", "완벽 보장"],
-      emojiRule: "역동적인 이모지 적절히 사용",
-      sentenceLengthRule: "짧고 강한 문장",
-      sourceSummary: "브랜드 문서 분석 완료"
-    };
-    //연동 연출을 보여주기 위해 3초(3000ms) 뒤 실행
-    setTimeout(() => {
-        //3초 뒤에 전역 로딩을 끄고 화면을 이동시킵니다
-        triggerLoading(false); 
-        //바로 navigate x 데이터를 저장한 뒤 질문 모달을 띄우기
-        setTempAIResult(mockAIResult);
+      // 3. 백엔드 n8n 웹훅으로 진짜 실시간 통신 출발
+      //n8n 웹훅의 path 규칙이 'brands/analysis'이므로 주소 끝처리를 맞춰줌 
+      const response = await fetch("http://localhost:5678/webhook/brands/analysis", {
+        method: "POST",
+        body: formData, // FormData를 보낼 때는 headers에 Content-Type을 수동으로 적지x, 브라우저가 알아서 세팅
+      });
+
+      // 통신 에러 발생 시 예외 처리
+      if (!response.ok) {
+        throw new Error("서버 브랜드 분석 파이프라인 작동 실패");
+      }
+
+      // 4. 백엔드가 돌려준 성공 영수증 수신!
+      // 구조: { isSuccess: true, code: "POST_SUCCESS", result: { brandId: 12, brandName: "무신사" } }
+      const jsonResponse = await response.json();
+      console.log("백엔드가 돌려준 최종 웹훅 응답 데이터:", jsonResponse);
+
+      if (jsonResponse.isSuccess) {
+        // 5. 성공 시 전역 로딩창을 끄기
+        triggerLoading(false);
+        
+        //[핵심] 다음 화면(CreatePage)에서 진짜 AI 데이터들을 DB에서 불러올 수 있도록 
+        // 백엔드가 준 보따리 결과(brandId와 brandName)를 임시 주머니에 저장
+        setTempAIResult({
+          brandId: jsonResponse.result.brandId,
+          brandName: jsonResponse.result.brandName || brandName
+        });
+        
+        // 6. "게시글 생성으로 넘어가시겠습니까?" 질문 모달 열기
         setShowNextStepModal(true);
-      }, 3000);
-    };
-    //"네"를 눌렀을 때 실행될 함수
-    const handleGoToCreate = () => {
-      setShowNextStepModal(false);
-      navigate("/create", { state: { brandProfile: tempAIResult } });
-    };
+      } else {
+        throw new Error(jsonResponse.message || "분석 실패");
+      }
 
-    // "아니요"를 눌렀을 때 실행될 함수
-    const handleGoHome = () => {
-      setShowNextStepModal(false);
-      navigate("/"); // 홈으로 이동
-    };
+    } catch (error) {
+      console.error("연동 에러 발생:", error);
+      triggerLoading(false);
+      alert("서버와 연결할 수 없습니다. n8n 워크플로우가 활성화되어 있는지 확인해 주세요!");
+    }
+  };
+
+  // 모달에서 "네"를 눌렀을 때 실행될 함수 (컴포넌트 내부에 안전하게 배치)
+  const handleGoToCreate = () => {
+    setShowNextStepModal(false);
+    // 다음 페이지로 이동하면서 백엔드가 준 brandId가 포함된 보따리를 들고 갑니다.
+    navigate("/create", { state: { brandProfile: tempAIResult } });
+  };
+
+  //모달에서 "아니요"를 눌렀을 때 실행될 함수 (컴포넌트 내부에 안전하게 배치)
+  const handleGoHome = () => {
+    setShowNextStepModal(false);
+    navigate("/"); 
+  };
   
 
   return (
