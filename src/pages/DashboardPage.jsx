@@ -14,9 +14,7 @@ function DashboardPage() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch(
-                    "http://localhost:5678/webhook-test/posts",
-                );
+                const res = await fetch("http://localhost:5678/webhook/posts");
                 const data = await res.json();
 
                 if (data?.success) {
@@ -83,7 +81,7 @@ function DashboardPage() {
             {/* CTA */}
             <div className="cta-wrapper">
                 <Button
-                    text="게시물 생성하기"
+                    text="생성하기"
                     size="large"
                     onClick={() => navigate("/create")}
                 />
