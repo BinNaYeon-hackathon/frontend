@@ -3,7 +3,7 @@ import {
   Routes,
   Route,
   useLocation,
-  Link,
+  //Link,
 } from "react-router-dom";
 import { useState } from "react"; // 로딩 상태 관리
 
@@ -39,7 +39,7 @@ function Layout() {
       >
         {!isHome && <img src={logo} alt="logo" className="logo" />}
 
-        <nav
+        {/* <nav
           style={{
             display: "flex",
             gap: "10px",
@@ -51,7 +51,7 @@ function Layout() {
           <Link to="/brand">브랜드정보</Link>
           <Link to="/create">게시글생성</Link>
           <Link to="/preview">미리보기</Link>
-        </nav>
+        </nav> */}
       </div>
 
       {/* 로딩 스위치가 켜지면 하단부 영역에만 덮어쓰기됨 */}
